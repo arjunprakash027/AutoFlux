@@ -1,0 +1,20 @@
+name: 'pipeml'
+version: '1.0'
+profile: 'pipeml'
+packages-install-path: "/home/dbt_user/dbt_packages"
+
+models:
+  pipeml:
+    +materialized: table
+    staging:
+      +schema: staging
+      +materialized: view
+      
+    marts:
+      +schema: marts
+      +materialized: table
+
+seeds:
+  pipeml:
+    +schema: source
+    +full_refresh: true

@@ -1,0 +1,54 @@
+version: '3.8'
+
+networks:
+  pipenetwork:
+    driver: bridge
+
+services:
+  postgres:
+    build: ./postgres-server
+    container_name: postgres-server
+    user: root
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db
+    
+    ports:
+      - "5432:5432"
+    
+    volumes:
+      - pipedata:/var/lib/postgresql/data
+    
+    networks:
+      - pipenetwork
+
+  pre-model:
+    build: ./transformation
+    container_name: transformation
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./transformation:/app
+    working_dir: /app
+    
+    networks:
+      - pipenetwork
+    
+    depends_on:
+      - postgres
+
+  modelling:
+    build: ./ml
+    container_name: ml
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./ml:/app/
+    working_dir: /app
+    networks:
+      - pipenetwork
+
+volumes:
+  pipedata:
