@@ -5,39 +5,55 @@ networks:
     driver: bridge
 
 services:
-  postgres:
-    build: ./postgres-server
-    container_name: postgres-server
-    user: root
-    restart: always
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=db
-    
-    ports:
-      - "5432:5432"
-    
-    volumes:
-      - pipedata:/var/lib/postgresql/data
-    
-    networks:
-      - pipenetwork
 
-  pre-model:
-    build: ./transformation
-    container_name: transformation
+  spark:
+    build: ./spark-server
+    container_name: spark-server
     stdin_open: true
     tty: true
     volumes:
-      - ./transformation:/app
-    working_dir: /app
-    
+      - spark-volume:/app/data
     networks:
       - pipenetwork
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+      - "4040:4040"
+      - "18080:18080"
+
+  # postgres:
+  #   build: ./postgres-server
+  #   container_name: postgres-server
+  #   user: root
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_USER=user
+  #     - POSTGRES_PASSWORD=password
+  #     - POSTGRES_DB=db
     
-    depends_on:
-      - postgres
+  #   ports:
+  #     - "5432:5432"
+    
+  #   volumes:
+  #     - pipedata:/var/lib/postgresql/data
+    
+  #   networks:
+  #     - pipenetwork
+
+  # pre-model:
+  #   build: ./transformation
+  #   container_name: transformation
+  #   stdin_open: true
+  #   tty: true
+  #   volumes:
+  #     - ./transformation:/app
+  #   working_dir: /app
+    
+  #   networks:
+  #     - pipenetwork
+    
+  #   depends_on:
+  #     - postgres
 
   modelling:
     build: ./ml
@@ -52,3 +68,4 @@ services:
 
 volumes:
   pipedata:
+  spark-volume:
