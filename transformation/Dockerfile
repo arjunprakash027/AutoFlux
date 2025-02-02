@@ -22,7 +22,7 @@ ENV PYSPARK_DRIVER_PYTHON=/usr/local/bin/python
 # Install Python dependencies
 RUN pip install --upgrade pip wheel && \
     pip install \
-    pyspark \
+    pyspark==3.3.2 \
     dbt-spark \
     delta-spark==2.2.0 \
     pyhive[hive] \

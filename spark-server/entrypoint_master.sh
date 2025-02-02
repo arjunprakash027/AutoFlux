@@ -7,7 +7,7 @@
     --port 7077 \
     --webui-port 8080
 
-# Start Thrift Server with Delta config
+# Start Thrift Server with limited resources
 /spark/sbin/start-thriftserver.sh \
     --master "spark://spark-server:7077" \
     --hiveconf hive.server2.thrift.port=10000 \
@@ -18,7 +18,14 @@
     --conf spark.driver.bindAddress=0.0.0.0 \
     --hiveconf hive.server2.transport.mode=binary \
     --hiveconf hive.server2.authentication=NOSASL \
-    --conf spark.sql.hive.thriftServer.singleSession=true
+    --conf spark.sql.hive.thriftServer.singleSession=true \
+    --conf spark.driver.memory=1g \
+    --conf spark.driver.cores=2 \
+    --conf spark.executor.cores=2 \
+    --conf spark.executor.memory=1g \
+    --conf spark.executor.instances=1 \
+    --conf spark.cores.max=2 \
+    --conf spark.dynamicAllocation.enabled=false
 
 # Keep container alive
 tail -f /dev/null
