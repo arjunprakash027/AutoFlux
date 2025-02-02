@@ -1,15 +1,15 @@
 #!/bin/bash
 # Run the dbt processes in entry
-echo "Running deps"
+# echo "Running deps"
 dbt deps
 
 echo "Running Seed"
-dbt seed
+#dbt seed
 
 echo "Data Loaded"
-dbt run
+# dbt run
 
-echo "Transformation Done!"
+# echo "Transformation Done!"
 
 # Keep the container hanging
 exec tail -f /dev/null

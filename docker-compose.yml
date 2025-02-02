@@ -9,10 +9,11 @@ services:
   spark:
     build: ./spark-server
     container_name: spark-server
+    hostname: spark-server
     stdin_open: true
     tty: true
     volumes:
-      - spark-volume:/app/data
+      - spark-volume:/spark-warehouse
     networks:
       - pipenetwork
     ports:
@@ -20,42 +21,60 @@ services:
       - "7077:7077"
       - "4040:4040"
       - "18080:18080"
+      - "10000:10000"
+      - "9083:9083"
+    command: ["/entrypoint_master.sh"]
+  
+  spark_worker:
+    build: ./spark-server
+    container_name: spark-wroker
+    hostname: spark-worker
+    stdin_open: true
+    tty: true
+    volumes:
+      - spark-volume:/spark-warehouse
+    depends_on:
+      - spark
+    networks:
+      - pipenetwork
+    command: ["/entrypoint_worker.sh"]
 
-  # postgres:
-  #   build: ./postgres-server
-  #   container_name: postgres-server
-  #   user: root
-  #   restart: always
-  #   environment:
-  #     - POSTGRES_USER=user
-  #     - POSTGRES_PASSWORD=password
-  #     - POSTGRES_DB=db
+  postgres:
+    build: ./postgres-server
+    container_name: postgres-server
+    user: root
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db
     
-  #   ports:
-  #     - "5432:5432"
+    ports:
+      - "5432:5432"
     
-  #   volumes:
-  #     - pipedata:/var/lib/postgresql/data
+    volumes:
+      - pipedata:/var/lib/postgresql/data
     
-  #   networks:
-  #     - pipenetwork
+    networks:
+      - pipenetwork
 
-  # pre-model:
-  #   build: ./transformation
-  #   container_name: transformation
-  #   stdin_open: true
-  #   tty: true
-  #   volumes:
-  #     - ./transformation:/app
-  #   working_dir: /app
+  transformation:
+    build: ./transformation
+    container_name: transformation
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./transformation:/app
+    working_dir: /app
     
-  #   networks:
-  #     - pipenetwork
+    networks:
+      - pipenetwork
     
-  #   depends_on:
-  #     - postgres
+    depends_on:
+      - spark
+      - spark_worker
 
-  modelling:
+  ml:
     build: ./ml
     container_name: ml
     stdin_open: true

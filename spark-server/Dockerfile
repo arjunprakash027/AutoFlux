@@ -1,26 +1,37 @@
-# Dockerfile to setup spark server
-FROM openjdk:11
+# spark/Dockerfile
+FROM openjdk:11-jdk-slim
 
-WORKDIR /app
+ARG SPARK_VERSION=3.3.2
+ARG DELTA_VERSION=2.2.0
 
-ENV SPARK_VERSION=3.5.0
-ENV HADOOP_VERSION=3
-ENV SPARK_HOME=/opt/spark
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    wget \
+    python3 \
+    procps \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install spark
-RUN apt-get update && apt-get install -y curl unzip wget && rm -rf /var/lib/apt/lists/* && \
-    curl -fsSl "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" | tar -xz -C /opt && \
-    mv /opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} /opt/spark
+# Download and install Spark
+RUN wget -q https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz \
+    && tar xzf spark-${SPARK_VERSION}-bin-hadoop3.tgz \
+    && mv spark-${SPARK_VERSION}-bin-hadoop3 /spark \
+    && rm spark-${SPARK_VERSION}-bin-hadoop3.tgz
 
-ENV PATH="${SPARK_HOME}/bin:${SPARK_HOME}/sbin:${PATH}"
+# Add Delta Lake JARs
+RUN curl -fL --retry 3 --retry-delay 5 \
+    -o /spark/jars/delta-core_2.12-${DELTA_VERSION}.jar \
+    https://repo.maven.apache.org/maven2/io/delta/delta-core_2.12/${DELTA_VERSION}/delta-core_2.12-${DELTA_VERSION}.jar && \
+    curl -fL --retry 3 --retry-delay 5 \
+    -o /spark/jars/delta-storage-${DELTA_VERSION}.jar \
+    https://repo.maven.apache.org/maven2/io/delta/delta-storage/${DELTA_VERSION}/delta-storage-${DELTA_VERSION}.jar
 
-# Install delta lake
-#RUN wget -o /opt/spark/jars/delta-core_2.12-2.4.0.jar https://repo1.maven.org/maven2/io/delta/delta-core_2.12/2.4.0/delta-core_2.12-2.4.0.jar
+# Configure Spark
+COPY entrypoint_master.sh entrypoint_worker.sh /
+RUN chmod +x /entrypoint_master.sh /entrypoint_worker.sh
 
-RUN mkdir -p ${SPARK_HOME}/conf && \
-    echo "spark.jars.packages=io.delta:delta-core_2.12:2.4.0" >> $SPARK_HOME/conf/spark-defaults.conf
+ENV SPARK_HOME=/spark
+ENV PATH=$PATH:$SPARK_HOME/bin
+EXPOSE 7077 8080 10000
 
-EXPOSE 4040 7077 8080 18080
-
-CMD ["/bin/bash","-c","/opt/spark/sbin/start-master.sh && tail -f /dev/null"]
-
+#ENTRYPOINT ["/entrypoint_master.sh"]
