@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     procps \
     curl \
+    netcat \
     && rm -rf /var/lib/apt/lists/*
 
 # Download and install Spark
@@ -17,6 +18,10 @@ RUN wget -q https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-$
     && tar xzf spark-${SPARK_VERSION}-bin-hadoop3.tgz \
     && mv spark-${SPARK_VERSION}-bin-hadoop3 /spark \
     && rm spark-${SPARK_VERSION}-bin-hadoop3.tgz
+
+RUN wget -q https://jdbc.postgresql.org/download/postgresql-42.5.0.jar -P /opt/spark/jars/
+COPY hive-site.xml /opt/spark/conf/
+
 
 # Add Delta Lake JARs
 RUN curl -fL --retry 3 --retry-delay 5 \
@@ -29,6 +34,7 @@ RUN curl -fL --retry 3 --retry-delay 5 \
 # Configure Spark
 COPY entrypoint_master.sh entrypoint_worker.sh /
 RUN chmod +x /entrypoint_master.sh /entrypoint_worker.sh
+
 
 ENV SPARK_HOME=/spark
 ENV PATH=$PATH:$SPARK_HOME/bin

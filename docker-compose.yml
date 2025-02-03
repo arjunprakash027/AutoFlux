@@ -24,6 +24,8 @@ services:
       - "10000:10000"
       - "9083:9083"
     command: ["/entrypoint_master.sh"]
+    depends_on:
+      - metastore-db
   
   spark_worker:
     build: ./spark-server
@@ -39,24 +41,17 @@ services:
       - pipenetwork
     command: ["/entrypoint_worker.sh"]
 
-  postgres:
+  metastore-db:
     build: ./postgres-server
-    container_name: postgres-server
-    user: root
-    restart: always
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=db
-    
+    container_name: metastore-db
     ports:
       - "5432:5432"
-    
     volumes:
       - pipedata:/var/lib/postgresql/data
-    
     networks:
       - pipenetwork
+    stdin_open: true
+    tty: true
 
   transformation:
     build: ./transformation

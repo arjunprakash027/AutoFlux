@@ -7,6 +7,24 @@
     --port 7077 \
     --webui-port 8080
 
+# wait for postgres
+echo "Waiting for postgres to start..."
+until nc -z -v -w30 metastore-db 5432
+do
+    echo "Waiting for database connection..."
+    sleep 5
+done
+echo "Postgres started"
+
+# metastore initialization
+if [ ! -f "/opt/spark/metastore_initialized" ]; then
+    echo "Initializing metastore..."
+    /opt/spark/bin/schematool -dbType postgres -initSchema
+    touch /opt/spark/metastore_initialized
+else
+    echo "Metastore already initialized"
+fi
+
 # Start Thrift Server with limited resources
 /spark/sbin/start-thriftserver.sh \
     --master "spark://spark-server:7077" \
