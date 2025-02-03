@@ -15,9 +15,14 @@ done
 
 echo "pg started"
 
-psql -U user -d metastore -f /docker-entrypoint-initdb.d/hive-schema.sql
+if psql -U user -d metastore -tAc "SELECT 1 FROM information_schema.tables WHERE table_name='DBS';" | grep -q 1; then
+    echo "Metastore already initialized"
 
-echo "Metastore initialized"
+else
+    echo "Initializing metastore..."
+    psql -U user -d metastore -f /docker-entrypoint-initdb.d/hive-schema.sql
+    echo "Metastore initialized"
+fi
 
 tail -f /dev/null
 
