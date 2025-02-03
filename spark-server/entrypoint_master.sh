@@ -16,15 +16,6 @@ do
 done
 echo "Postgres started"
 
-# metastore initialization
-if [ ! -f "/opt/spark/metastore_initialized" ]; then
-    echo "Initializing metastore..."
-    /opt/spark/bin/schematool -dbType postgres -initSchema
-    touch /opt/spark/metastore_initialized
-else
-    echo "Metastore already initialized"
-fi
-
 # Start Thrift Server with limited resources
 /spark/sbin/start-thriftserver.sh \
     --master "spark://spark-server:7077" \

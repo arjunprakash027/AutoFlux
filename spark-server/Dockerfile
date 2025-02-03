@@ -19,8 +19,8 @@ RUN wget -q https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-$
     && mv spark-${SPARK_VERSION}-bin-hadoop3 /spark \
     && rm spark-${SPARK_VERSION}-bin-hadoop3.tgz
 
-RUN wget -q https://jdbc.postgresql.org/download/postgresql-42.5.0.jar -P /opt/spark/jars/
-COPY hive-site.xml /opt/spark/conf/
+RUN wget -q https://jdbc.postgresql.org/download/postgresql-42.5.0.jar -P /spark/jars/
+COPY hive-site.xml /spark/conf/
 
 
 # Add Delta Lake JARs
