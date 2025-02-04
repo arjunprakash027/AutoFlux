@@ -82,4 +82,6 @@ services:
 
 volumes:
   pipedata:
+    driver: local
   spark-volume:
+    driver: local
