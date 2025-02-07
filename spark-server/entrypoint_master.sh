@@ -8,10 +8,10 @@
     --webui-port 8080
 
 # wait for postgres
-echo "Waiting for postgres to start..."
-until nc -z -v -w30 metastore-db 5432
+echo "Waiting for hive metastore server to start..."
+until nc -z -v -w30 metastore-db 9083
 do
-    echo "Waiting for database connection..."
+    echo "Waiting hive connection..."
     sleep 5
 done
 echo "Postgres started"
@@ -21,6 +21,9 @@ echo "Postgres started"
     --master "spark://spark-server:7077" \
     --hiveconf hive.server2.thrift.port=10000 \
     --hiveconf hive.server2.thrift.bind.host=0.0.0.0 \
+    --hiveconf hive.metastore.uris=thrift://metastore-db:9083 \
+    --conf spark.sql.warehouse.dir=file:///spark-warehouse \
+    --conf spark.sql.catalogImplementation=hive \
     --conf spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension \
     --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog \
     --conf spark.driver.host=spark-server \
@@ -28,6 +31,7 @@ echo "Postgres started"
     --hiveconf hive.server2.transport.mode=binary \
     --hiveconf hive.server2.authentication=NOSASL \
     --conf spark.sql.hive.thriftServer.singleSession=true \
+    --conf spark.sql.hive.metastore.jars=builtin \
     --conf spark.driver.memory=1g \
     --conf spark.driver.cores=2 \
     --conf spark.executor.cores=2 \

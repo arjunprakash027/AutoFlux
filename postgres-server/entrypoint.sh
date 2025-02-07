@@ -24,6 +24,8 @@ echo "pg started"
 #     echo "Metastore initialized"
 # fi
 
+hive --service metastore --hiveconf hive.metastore.uris=thrift://0.0.0.0:9083
+
 tail -f /dev/null
 
 

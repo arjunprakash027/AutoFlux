@@ -1,5 +1,15 @@
 <configuration>
   <property>
+    <name>hive.metastore.uris</name>
+    <value>thrift://metastore-db:9083</value>
+  </property>
+
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>file:///spark-warehouse</value>
+  </property>
+  
+  <property>
     <name>javax.jdo.option.ConnectionURL</name>
     <value>jdbc:postgresql://metastore-db:5432/metastore</value>
   </property>
@@ -11,7 +21,7 @@
 
   <property>
     <name>javax.jdo.option.ConnectionUserName</name>
-    <value>user</value>
+    <value>postgres</value>
   </property>
 
   <property>

@@ -6,7 +6,12 @@
 
   <property>
     <name>javax.jdo.option.ConnectionURL</name>
-    <value>jdbc:postgresql://localhost:5432/metastore</value>
+    <value>jdbc:postgresql://0.0.0.0:5432/metastore</value>
+  </property>
+
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>file:///spark-warehouse</value>
   </property>
 
   <property>
@@ -16,7 +21,7 @@
 
   <property>
     <name>javax.jdo.option.ConnectionUserName</name>
-    <value>user</value>
+    <value>postgres</value>
   </property>
 
   <property>
