@@ -62,6 +62,7 @@ services:
     tty: true
     volumes:
       - ./transformation:/app
+      - spark-volume:/spark-warehouse
     working_dir: /app
     
     networks:
