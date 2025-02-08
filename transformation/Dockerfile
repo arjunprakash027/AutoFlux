@@ -6,10 +6,8 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     bash \
     coreutils \
-    netcat-openbsd \  
-    openjdk-17-jdk \ 
-    libsasl2-dev \    
-    g++ \             
+    netcat-openbsd \
+    openjdk-17-jdk \
     git \
     && rm -rf /var/lib/apt/lists/*
 
@@ -23,11 +21,8 @@ ENV PYSPARK_DRIVER_PYTHON=/usr/local/bin/python
 RUN pip install --upgrade pip wheel && \
     pip install \
     pyspark==3.3.2 \
-    dbt-spark \
-    delta-spark==2.2.0 \
-    pyhive[hive] \
-    thrift-sasl==0.4.3 \
-    sqlalchemy==1.4.46
+    dbt-spark[PyHive] \
+    delta-spark==2.2.0
 
 # Configure dbt
 RUN mkdir -p /root/.dbt && \
@@ -38,7 +33,7 @@ COPY profiles.yml /root/.dbt/profiles.yml
 COPY . .
 
 # Validation step to check environment
-RUN python -c "import pyspark, pyhive, dbt"
+RUN python -c "import pyspark, dbt"
 RUN dbt --version
 
 ENTRYPOINT ["./entrypoint.sh"]

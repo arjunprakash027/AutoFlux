@@ -64,10 +64,8 @@ services:
       - ./transformation:/app
       - spark-volume:/spark-warehouse
     working_dir: /app
-    
     networks:
-      - pipenetwork
-    
+      - pipenetwork    
     depends_on:
       - spark
       - spark_worker
@@ -79,9 +77,15 @@ services:
     tty: true
     volumes:
       - ./ml:/app/
+      - spark-volume:/spark-warehouse
     working_dir: /app
     networks:
       - pipenetwork
+    depends_on:
+      - transformation
+      - spark
+      - spark_worker
+      - metastore-db
 
 volumes:
   pipedata:
