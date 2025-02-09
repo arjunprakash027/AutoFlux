@@ -22,7 +22,6 @@ RUN wget -q https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-$
 RUN wget -q https://jdbc.postgresql.org/download/postgresql-42.5.0.jar -P /spark/jars/
 COPY hive-site.xml /spark/conf/
 
-
 # Add Delta Lake JARs
 RUN curl -fL --retry 3 --retry-delay 5 \
     -o /spark/jars/delta-core_2.12-${DELTA_VERSION}.jar \
@@ -35,9 +34,6 @@ RUN curl -fL --retry 3 --retry-delay 5 \
 COPY entrypoint_master.sh entrypoint_worker.sh /
 RUN chmod +x /entrypoint_master.sh /entrypoint_worker.sh
 
-
 ENV SPARK_HOME=/spark
 ENV PATH=$PATH:$SPARK_HOME/bin
 EXPOSE 7077 8080 10000
-
-#ENTRYPOINT ["/entrypoint_master.sh"]

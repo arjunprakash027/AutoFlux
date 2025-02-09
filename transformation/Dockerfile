@@ -32,9 +32,5 @@ RUN mkdir -p /root/.dbt && \
 COPY profiles.yml /root/.dbt/profiles.yml
 COPY . .
 
-# Validation step to check environment
-RUN python -c "import pyspark, dbt"
-RUN dbt --version
-
 ENTRYPOINT ["./entrypoint.sh"]
 

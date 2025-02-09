@@ -3,7 +3,6 @@ version: '1.0'
 profile: 'pipeml'
 packages-install-path: "/home/dbt_user/dbt_packages"
 
-
 models:
   pipeml:
     +materialized: table

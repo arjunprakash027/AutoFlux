@@ -22,7 +22,6 @@ services:
       - "4040:4040"
       - "18080:18080"
       - "10000:10000"
-      #- "9083:9083"
     command: ["/entrypoint_master.sh"]
     depends_on:
       - metastore-db

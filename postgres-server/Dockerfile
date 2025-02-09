@@ -7,6 +7,7 @@ ENV POSTGRES_DB=metastore
 RUN apt-get update && apt-get install -y \
     openjdk-17-jdk wget
 
+# Installing hadoop and hive as they are neccessary to run hive metastore and establish connection with postgres server
 RUN wget -O /usr/local/hadoop.tar.gz https://downloads.apache.org/hadoop/common/hadoop-3.4.1/hadoop-3.4.1.tar.gz && \
     tar -xzf /usr/local/hadoop.tar.gz -C /usr/local/ && \
     mv /usr/local/hadoop-3.4.1 /usr/local/hadoop && \
@@ -25,13 +26,13 @@ ENV PATH="${HADOOP_HOME}/bin:$HADOOP_HOME/sbin:$HIVE_HOME/bin:${JAVA_HOME}/bin:$
 
 RUN wget -q https://jdbc.postgresql.org/download/postgresql-42.5.0.jar -P $HIVE_HOME/lib/
 
+# Hive schema contains the connection information for postgres
 COPY hive-site.xml $HIVE_HOME/conf/hive-site.xml
 
+# anything inside docker-entrypoint folder will run when starting a container
 COPY hive-schema.sql /docker-entrypoint-initdb.d/hive-schema.sql
 COPY entrypoint.sh /entrypoint.sh
-
-# RUN mkdir -p /spark-warehouse && \
-#     chmod -R 777 /spark-warehouse 
+ 
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 5432 9083
