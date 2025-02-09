@@ -2,7 +2,7 @@ sources:
 ############################# Production Sources #################################
   - name: input_data
     description: pipeml input data
-    database: db
+    #database: db
     schema: source
     tables:
       - name: input_data

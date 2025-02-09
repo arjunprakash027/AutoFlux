@@ -5,50 +5,89 @@ networks:
     driver: bridge
 
 services:
-  postgres:
-    build: ./postgres-server
-    container_name: postgres-server
-    user: root
-    restart: always
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=db
-    
-    ports:
-      - "5432:5432"
-    
+
+  spark:
+    build: ./spark-server
+    container_name: spark-server
+    hostname: spark-server
+    stdin_open: true
+    tty: true
     volumes:
-      - pipedata:/var/lib/postgresql/data
-    
+      - spark-volume:/spark-warehouse
     networks:
       - pipenetwork
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+      - "4040:4040"
+      - "18080:18080"
+      - "10000:10000"
+    command: ["/entrypoint_master.sh"]
+    depends_on:
+      - metastore-db
+  
+  spark_worker:
+    build: ./spark-server
+    container_name: spark-wroker
+    hostname: spark-worker
+    stdin_open: true
+    tty: true
+    volumes:
+      - spark-volume:/spark-warehouse
+    depends_on:
+      - spark
+    networks:
+      - pipenetwork
+    command: ["/entrypoint_worker.sh"]
 
-  pre-model:
+  metastore-db:
+    build: ./postgres-server
+    container_name: metastore-db
+    ports:
+      - "5432:5432"
+      - "9083:9083"
+    volumes:
+      - pipedata:/var/lib/postgresql/data
+      - spark-volume:/spark-warehouse
+    networks:
+      - pipenetwork
+    stdin_open: true
+    tty: true
+
+  transformation:
     build: ./transformation
     container_name: transformation
     stdin_open: true
     tty: true
     volumes:
       - ./transformation:/app
+      - spark-volume:/spark-warehouse
     working_dir: /app
-    
     networks:
-      - pipenetwork
-    
+      - pipenetwork    
     depends_on:
-      - postgres
+      - spark
+      - spark_worker
 
-  modelling:
+  ml:
     build: ./ml
     container_name: ml
     stdin_open: true
     tty: true
     volumes:
       - ./ml:/app/
+      - spark-volume:/spark-warehouse
     working_dir: /app
     networks:
       - pipenetwork
+    depends_on:
+      - transformation
+      - spark
+      - spark_worker
+      - metastore-db
 
 volumes:
   pipedata:
+    driver: local
+  spark-volume:
+    driver: local
