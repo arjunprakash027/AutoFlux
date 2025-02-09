@@ -115,11 +115,8 @@ docker ps
 
 You should see:
 
-- **Spark Master**
-- **Spark Worker**
-- **Hive Metastore**
-- **Transformation**
-- **ML**
+![image](https://github.com/user-attachments/assets/ebaf1fa2-fbfa-4348-935e-06c608d3af89)
+
 
 ### **Run transformation**
 
