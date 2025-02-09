@@ -115,8 +115,7 @@ docker ps
 
 You should see:
 
-![image](https://github.com/user-attachments/assets/ebaf1fa2-fbfa-4348-935e-06c608d3af89)
-
+![image](https://github.com/user-attachments/assets/184686ef-51ec-4726-a8f6-b26583e92b8a)
 
 ### **Run transformation**
 
