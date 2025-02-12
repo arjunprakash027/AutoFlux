@@ -36,4 +36,7 @@ RUN chmod +x /entrypoint_master.sh /entrypoint_worker.sh
 
 ENV SPARK_HOME=/spark
 ENV PATH=$PATH:$SPARK_HOME/bin
+
+RUN ln -s /usr/bin/python3 /usr/local/bin/python
+
 EXPOSE 7077 8080 10000
