@@ -22,8 +22,6 @@ def ingest_spark(
         .config("spark.sql.warehouse.dir", "file:///spark-warehouse")
         .config("spark.sql.catalogImplementation", "hive")
         .config("hive.metastore.uris", "thrift://metastore-db:9083")
-        .config("spark.pyspark.python","/usr/bin/python3")
-        .config("spark.pyspark.driver.python","/usr/bin/python3")
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
         .enableHiveSupport()
@@ -34,15 +32,10 @@ def ingest_spark(
     for file in files:
 
         try:
-            # df = spark.read.csv(file, 
-            #                     header=True, 
-            #                     inferSchema=True
-            #                     )
-
-
-            pd_df = pd.read_csv(file)
-
-            df = spark.createDataFrame(pd_df)
+            df = spark.read.csv(file, 
+                                header=True, 
+                                inferSchema=True
+                                )
 
             table_name = file.split("/")[-1].split(".")[0]
 
