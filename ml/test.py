@@ -17,4 +17,4 @@ spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
 #spark = builder.enableHiveSupport().getOrCreate()
 
-spark.sql("SELECT * FROM default_source.column_description limit 100;").show()
+spark.sql("SELECT * FROM test limit 100;").show()

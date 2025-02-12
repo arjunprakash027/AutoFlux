@@ -29,6 +29,10 @@ def ingest_spark(
 
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
+    # Spark expects schemas to be present before writing to it
+    schema_name = "raw"
+    spark.sql(f"CREATE DATABASE IF NOT EXISTS {schema_name}")
+
     for file in files:
 
         try:
@@ -37,7 +41,7 @@ def ingest_spark(
                                 inferSchema=True
                                 )
 
-            table_name = file.split("/")[-1].split(".")[0]
+            table_name = f"{schema_name}.{file.split('/')[-1].split('.')[0]}"
 
             df.write.format("delta").mode("overwrite").saveAsTable(table_name)
 

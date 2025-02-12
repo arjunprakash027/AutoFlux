@@ -46,7 +46,7 @@ services:
     build: ./postgres-server
     container_name: metastore-db
     ports:
-      - "5431:5432"
+      - "5432:5432"
       - "9083:9083"
     volumes:
       - pipedata:/var/lib/postgresql/data
