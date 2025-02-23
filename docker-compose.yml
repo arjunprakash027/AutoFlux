@@ -84,7 +84,6 @@ services:
     networks:
       - pipenetwork
     depends_on:
-      - transformation
       - spark
       - spark_worker
       - metastore-db
