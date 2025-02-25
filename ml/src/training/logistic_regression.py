@@ -19,24 +19,6 @@ df:DataFrame = spark.read.table("default_staging.stg_full").limit(1000).toPandas
 df_num = df.select_dtypes(include=['number'])
 df_num = df_num.fillna(0)
 
-<<<<<<< HEAD
-params = {
-    "solver":"lbfgs",
-    "random_state":42,
-    "class_weight":"balanced",
-    "max_iter":10000
-}
-
-trainer = Trainer(
-    estimator=LogisticRegression,
-    df=df_num,
-    target="TARGET",
-    params=params
-)
-
-trainer.fit()
-
-=======
 # setting up mlflow
 
 mlflow.set_tracking_uri("http://0.0.0.0:6969")
@@ -65,4 +47,3 @@ with mlflow.start_run():
 
     for metric, value in accuracy_metrices.items():
         mlflow.log_metric(metric, value)
->>>>>>> 8230fdc06096ada9e54f6087d2bc4093284dfa79
