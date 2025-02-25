@@ -81,6 +81,8 @@ services:
       - ./ml:/app/
       - spark-volume:/spark-warehouse
     working_dir: /app
+    ports:
+      - "6969:6969"
     networks:
       - pipenetwork
     depends_on:
