@@ -1,7 +1,7 @@
 # Internal imports
 from src import build_spark
 spark = build_spark()
-from src.training.utils import Trainer
+from src.utils.traditional_ml.trainer import Trainer
 
 # Library imports
 import mlflow
