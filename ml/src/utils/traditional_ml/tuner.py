@@ -73,13 +73,13 @@ class TunerFactory(BaseTuner):
             self.params = ParamSpace().get_param_space(self.model_name)
 
         tuned_params = GridSearchTuner(
-            self.model,
-            self.model_name,
-            self.X_train,
-            self.y_train,
-            self.X_test,
-            self.y_test,
-            self.params,
+            model=self.model,
+            model_name=self.model_name,
+            X_train=self.X_train,
+            y_train=self.y_train,
+            X_test=self.X_test,
+            y_test=self.y_test,
+            params=self.params,
             hyper_params_config=self.hyper_params_config
         ).tune()
 

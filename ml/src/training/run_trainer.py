@@ -24,7 +24,7 @@ class TrainerPipeline:
 
         return {
             "LogisticRegression": sklearn.linear_model.LogisticRegression,
-            "LBGMClassifier": lightgbm.LGBMClassifier
+            "LGBMClassifier": lightgbm.LGBMClassifier
         }
     
     def _read_input(self) -> None:
