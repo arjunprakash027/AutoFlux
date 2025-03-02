@@ -1,0 +1,53 @@
+project_name: statistella #Name of the project
+
+training:
+  input_data_source: default_staging.stg_full #location for the input data in spark
+  target: TARGET #The target column
+  #unique_identifier: ID #The unique identifier column to remove before training
+
+# Model iterations
+models:
+    # LGBMClassifier:
+    #     experiment_name: an experiment #optinonal
+        # model_params:
+        #     boosting_type: gbdt
+        #     num_leaves: 31
+        #     max_depth: -1
+        #     learning_rate: 0.1
+        #     n_estimators: 100
+        #     subsample_for_bin: 200000
+        #     objective: binary
+        #     class_weight: balanced
+        #     min_split_gain: 0.0
+        #     min_child_weight: 0.001
+        #     min_child_samples: 20
+        #     subsample: 1.0
+        #     subsample_freq: 0
+        #     colsample_bytree: 1.0
+        #     reg_alpha: 0.0
+        #     reg_lambda: 0.0
+        #     random_state: 42
+        #     n_jobs: -1
+        #     importance_type: split
+    
+    LogisticRegression:
+        model_params:
+            penalty: l2
+            tol: 0.0001
+            C: 1.0
+            fit_intercept: True
+            intercept_scaling: 1
+            class_weight: None
+            random_state: 42
+            solver: lbfgs
+            max_iter: 100
+            n_jobs: -1
+            l1_ratio: None
+
+# For halved grid search only right now
+hyper_parameter_tuning: #optional, if present, parameter tuning will be performed
+    perform: False
+    scoring: f1
+    cv: 5
+    factor: 2 # Half of parameters combinations will be removed in the next iteration
+

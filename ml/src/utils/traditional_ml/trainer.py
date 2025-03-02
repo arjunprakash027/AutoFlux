@@ -6,6 +6,7 @@ import mlflow.sklearn
 
 #internal imports
 from src.utils.traditional_ml.tuner import TunerFactory
+from src.utils.config_reader import HyperParameterBaseModel
 
 class Trainer:
     def __init__(self, 
@@ -14,12 +15,16 @@ class Trainer:
                  target:str,
                  params:dict,
                  experiment_name:str = None,
-                 tag:str = "default tag") -> None:
+                 tag:str = "default tag",
+                 hyper_params_config:HyperParameterBaseModel = HyperParameterBaseModel) -> None:
         
         # ml flow settings
         self.estimator_name = estimator.__name__
         self.experiment_name = experiment_name if experiment_name else self.estimator_name
         self.tag = tag
+
+        # Configs
+        self.hyper_params_config = hyper_params_config
 
         # ml model settings
         self.estimator = estimator
@@ -89,16 +94,8 @@ class Trainer:
         
 
     def fit(self) -> None:
-
-        param_space = {
-            "penalty": ["l1", "l2", "elasticnet", None],
-            "C": [0.001, 0.01, 0.1, 1, 10, 100],
-            "solver": ["liblinear", "saga", "lbfgs", "newton-cg"],
-            "max_iter": [1000,1500,2000,2500],
-            "tol": [1e-4, 1e-3, 1e-2],
-        }   
-
-
+        # the entire training process is in here to easily log whatever we want in mlflow
+    
         mlflow.set_tracking_uri("http://0.0.0.0:6969")
         mlflow.set_experiment(self.experiment_name)
         mlflow.set_tag("tag", self.tag)
@@ -107,17 +104,20 @@ class Trainer:
         mlflow.sklearn.autolog()
         mlflow.lightgbm.autolog()
         
-        tuner = TunerFactory(
-            model=self.estimator(),
-            X_train=self.X_train,
-            y_train=self.y_train,
-            X_test=self.X_test,
-            y_test=self.y_test,
-            params=param_space
-        )
+        # Tune hyper parameters
+        if self.hyper_params_config.perform:
+            tuner = TunerFactory(
+                model=self.estimator(),
+                model_name=self.estimator_name,
+                X_train=self.X_train,
+                y_train=self.y_train,
+                X_test=self.X_test,
+                y_test=self.y_test,
+                hyper_params_config=self.hyper_params_config
+            )
+            self.params = tuner.tune()
 
-        self.params = tuner.tune()
-
+        #fit the estimator based on received hyperparameters
         self.estimator = self.estimator(**self.params)
         self.estimator.fit(self.X_train, self.y_train)
 
@@ -140,6 +140,9 @@ class Trainer:
             mlflow.log_metric(metric, value)
         
         feature_importance = self._get_model_feature_mapping()
+        
+        # Logging neccessary artifacts
         mlflow.log_dict(feature_importance, "feature_importance.json")
+        mlflow.log_dict(self.params, "hyperparameters.json")
         
         mlflow.end_run()
