@@ -1,8 +1,12 @@
-# PipeML
+# AutoFlux
 A end to end workflow to run ingestion of data to pre-processing to training to deployment of an ML model
 
-A very basic architecture of environment setup using PipeML
-![Pipeml v0 1 architecture](https://github.com/user-attachments/assets/bc4849ff-8a67-4421-8996-2bad0633db1b)
+For more indepth docs on particular services:
+
+[ML](/ml/README.md)
+
+A very basic architecture of environment setup using AutoFlux
+![AutoFlux v0 1 architecture](https://github.com/user-attachments/assets/bc4849ff-8a67-4421-8996-2bad0633db1b)
 
 # Apache Spark + Hive + Delta Lake + PostgreSQL Metastore
 
@@ -39,6 +43,17 @@ This project sets up **Apache Spark with Hive**, using **PostgreSQL as the Hive 
 
 ---
 
+### **How Everything Comes Together**
+
+When we launch all Docker containers using `restart_compose.sh`, the entire pipeline comes to life. This includes the Spark master, Spark worker, Hive metastore, Postgres server, transformation server, and ML server.
+
+- The **transformation server** handles data ingestion from various sources (custom code) and stores it in **Delta Lake**.
+- **Transformation scripts** (written in SQL within DBT) then process and transform this data, again storing the output in **Delta Lake**. This is achieved using **PySpark** and **Thrift connections** via DBT.
+- The **Hive metastore**, running inside the Postgres container, manages metadata for tables and schemas and is connected to the Spark master.
+- All **Spark jobs** are executed through the Spark master in the **Heavy version** (whereas in the **Lite version**, there’s no Spark master—only PySpark within the ML container for development).
+
+On the **ML side**, the ML container has all necessary dependencies installed. It fetches data from **Delta Lake via PySpark**, converts it into a **Pandas DataFrame**, and runs **ML algorithms** on it. The entire ML pipeline is tracked using **MLflow**, and its UI can be accessed at `localhost:6969` for monitoring
+
 ## **🔧 How to Set Up & Run**
 
 ### **1️⃣ Prerequisites**
@@ -51,7 +66,7 @@ Ensure you have:
 ### **2️⃣ Clone the Repository**
 
 ```bash
-git clone https://github.com/arjunprakash027/PipeML.git
+git clone https://github.com/arjunprakash027/AutoFlux.git
 ```
 
 ### **3️⃣ Start the Docker Containers**
@@ -165,21 +180,3 @@ docker-compose down -v
 
 ---
 
-## **Future Improvements**
-
-🚀 **Make it Production-Ready**
-
-- Deploy in **Kubernetes**
-- Use **HDFS or S3 for Delta Lake storage**
-- Implement **Authentication & Security**
-
-🚀 **Enhance Performance**
-
-- Optimize **Spark Configuration**
-- Enable **Query Caching**
-- Set up **Indexes & Partitioning**
-
-🚀 **Enable Streaming**
-
-- Use **Kafka for real-time ingestion**
-- Enable **Delta Lake streaming tables**

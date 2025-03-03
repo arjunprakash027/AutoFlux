@@ -22,5 +22,7 @@ RUN poetry config virtualenvs.create false && \
 
 RUN python install_spark_dependencies.py
 
-CMD ["tail","-f","/dev/null"]
+EXPOSE 6969
+
+ENTRYPOINT [ "./start_server.sh" ]
 
