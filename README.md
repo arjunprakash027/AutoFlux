@@ -1,8 +1,12 @@
-# PipeML
+# AutoFlux
 A end to end workflow to run ingestion of data to pre-processing to training to deployment of an ML model
 
-A very basic architecture of environment setup using PipeML
-![Pipeml v0 1 architecture](https://github.com/user-attachments/assets/bc4849ff-8a67-4421-8996-2bad0633db1b)
+For more indepth docs on particular services:
+
+![ML]()
+
+A very basic architecture of environment setup using AutoFlux
+![AutoFlux v0 1 architecture](https://github.com/user-attachments/assets/bc4849ff-8a67-4421-8996-2bad0633db1b)
 
 # Apache Spark + Hive + Delta Lake + PostgreSQL Metastore
 
@@ -62,7 +66,7 @@ Ensure you have:
 ### **2️⃣ Clone the Repository**
 
 ```bash
-git clone https://github.com/arjunprakash027/PipeML.git
+git clone https://github.com/arjunprakash027/AutoFlux.git
 ```
 
 ### **3️⃣ Start the Docker Containers**
