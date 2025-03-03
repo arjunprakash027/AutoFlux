@@ -22,7 +22,11 @@ RUN pip install --upgrade pip wheel && \
     pip install \
     pyspark==3.3.2 \
     dbt-spark[PyHive] \
-    delta-spark==2.2.0
+    delta-spark==2.2.0 \
+    numpy==1.24.4 \
+    pandas==1.5.3 \
+    # Kaggle is needed for ingestion in this project
+    kaggle
 
 # Configure dbt
 RUN mkdir -p /root/.dbt && \
@@ -30,6 +34,12 @@ RUN mkdir -p /root/.dbt && \
     chmod -R 755 /home/dbt_user
 
 COPY profiles.yml /root/.dbt/profiles.yml
+
+# Only ig you are using kaggle for ingestion from kaggle repository
+COPY kaggle.json /root/.config/kaggle/kaggle.json
+
+RUN chmod 600 /root/.config/kaggle/kaggle.json
+
 COPY . .
 
 ENTRYPOINT ["./entrypoint.sh"]
