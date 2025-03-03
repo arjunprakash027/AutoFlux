@@ -1,25 +1,4 @@
 __pycache__
-*.ipynb_checkpoints
-
-artifacts/__pycache__
-artifacts/*.ipynb_checkpoints
-artifacts/*.joblib
-
-data/__pycache__
-data/*.ipynb_checkpoints
-data/input_data/*.csv
-data/input_data/*.ipynb_checkpoints
-data/interim_data/*.csv
-data/interim_data/*.ipynb_checkpoints
-data/output_data/*.csv
-data/output_data/*.ipynb_checkpoints
-data/output_data/accuracy_data/*.csv
-data/output_data/accuracy_data/*.ipynb_checkpoints
-
-notebooks/*.ipynb_checkpoints
-
-src/__pycache__
-src/*.ipynb_checkpoints
-.conda
-.scaleSurge
+mlruns
+mlartifacts
 

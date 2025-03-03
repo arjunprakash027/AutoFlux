@@ -9,6 +9,10 @@ do
     echo "Waiting for spark server to start..."
     sleep 5
 done
+
+# Pulling the data from kaggle using python
+python ingestion
+
 # Seeding data
 echo "Running Seed"
 dbt seed
