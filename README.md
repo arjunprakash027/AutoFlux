@@ -3,7 +3,7 @@ A end to end workflow to run ingestion of data to pre-processing to training to 
 
 For more indepth docs on particular services:
 
-![ML]()
+![ML](/ml/README.md)
 
 A very basic architecture of environment setup using AutoFlux
 ![AutoFlux v0 1 architecture](https://github.com/user-attachments/assets/bc4849ff-8a67-4421-8996-2bad0633db1b)
