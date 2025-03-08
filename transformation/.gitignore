@@ -5,3 +5,4 @@ dbt_packages/
 logs/
 kaggle.json
 datasets
+database
