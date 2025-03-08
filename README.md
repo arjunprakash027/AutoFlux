@@ -4,7 +4,8 @@ A end to end workflow to run ingestion of data to pre-processing to training to 
 For more indepth docs on particular services:
 
 ***This is lite version of the setup and in active development***
-***For spark version (not in active development) change the branch to main***
+
+***For the spark version (not in active development) change the branch to main***
 
 [ML](/ml/README.md) 
 
