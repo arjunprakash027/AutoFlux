@@ -1,7 +1,7 @@
 project_name: statistella #Name of the project
 
 training:
-  input_data_source: default_staging.stg_full #location for the input data in spark
+  input_data_source: main_staging.stg_full #location for the input data in spark
   target: TARGET #The target column
   #unique_identifier: ID #The unique identifier column to remove before training
 

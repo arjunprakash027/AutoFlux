@@ -3,16 +3,14 @@ import sklearn.linear_model
 from src.utils.config_reader import read_config, Configrations
 from src.utils.traditional_ml.trainer import Trainer
 
-from src import build_spark
-spark = build_spark()
-from src.utils.traditional_ml.trainer import Trainer
-
 # Library imports
 # sklearn imports
 import lightgbm
 import sklearn
 #pandas imports
 from pandas import DataFrame
+import ibis
+import duckdb
 
 class TrainerPipeline:
 
@@ -34,7 +32,10 @@ class TrainerPipeline:
         """
         input_table = self.config.training.input_data_source
 
-        df:DataFrame = spark.read.table(input_table).limit(10000).toPandas()
+        con = duckdb.connect("database/ml_db.duckdb")
+        
+        df = con.table(input_table).execute().df()
+
         df_num = df.select_dtypes(include=['number'])
         df_num = df_num.fillna(0)
 

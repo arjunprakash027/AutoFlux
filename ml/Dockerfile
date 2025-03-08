@@ -9,18 +9,16 @@ RUN apt-get update && apt-get install -y \
     bash \
     curl \
     git \
-    build-essential \
-    openjdk-17-jdk && \
+    build-essential && \
     rm -rf /var/lib/apt/lists/*
 
 RUN curl -sSL https://install.python-poetry.org | python3 - && \
     mv /root/.local/bin/poetry /usr/local/bin/poetry
 
-RUN poetry config virtualenvs.create false && \ 
+RUN poetry config virtualenvs.create false && \
+    poetry lock && \
     poetry install --no-root && \
     rm -rf /root/.cache/pypoetry
-
-RUN python install_spark_dependencies.py
 
 EXPOSE 6969
 
