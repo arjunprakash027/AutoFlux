@@ -3,14 +3,14 @@ A end to end workflow to run ingestion of data to pre-processing to training to 
 
 For more indepth docs on particular services:
 
-*** This is lite version of the setup and in active development ***
-*** For spark version (not in active development) change the branch to main ***
+***This is lite version of the setup and in active development***
+***For spark version (not in active development) change the branch to main***
 
 [ML](/ml/README.md) 
 
 [Ingestion & Transformation](/transformation/README.md)
 
-A very basic architecture of environment setup using AutoFlux
+A very basic architecture of environment setup using AutoFlux-lite
 ![AutoFlux v0 1 architecture](https://github.com/user-attachments/assets/bc4849ff-8a67-4421-8996-2bad0633db1b)
 
 
