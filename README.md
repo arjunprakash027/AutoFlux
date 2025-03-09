@@ -3,6 +3,13 @@ A end to end workflow to run ingestion of data to pre-processing to training to 
 
 For more indepth docs on particular services:
 
+## Download the repository
+The most easiest way to bring the repository into your local is to run this code
+
+```bash
+curl https://www.arjunrao.space/templates > temp.sh && bash temp.sh AutoFlux && rm -rf temp.sh
+```
+
 ***This is lite version of the setup and in active development***
 
 ***For the spark version (not in active development) change the branch to main***
