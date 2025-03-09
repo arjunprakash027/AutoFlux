@@ -42,7 +42,7 @@ This setup is ideal for environments with limited compute resources, making it a
 ### **Bring everything up**
 
 ```bash
-bash restart_compsose.sh
+bash compose_build.sh
 ```
 Will build and run every container
 
