@@ -1,4 +1,4 @@
-# AutoFlux
+# AutoFlux-lite
 A end to end workflow to run ingestion of data to pre-processing to training to deployment of an ML model
 
 For more indepth docs on particular services:
@@ -12,7 +12,8 @@ For more indepth docs on particular services:
 [Ingestion & Transformation](/transformation/README.md)
 
 A very basic architecture of environment setup using AutoFlux-lite
-![AutoFlux v0 1 architecture](https://github.com/user-attachments/assets/bc4849ff-8a67-4421-8996-2bad0633db1b)
+![AutoFlux Lite Architecture](https://github.com/user-attachments/assets/f8f2339f-d954-43b1-8e66-53f06065d03b)
+
 
 ## Overview of the architecture
 
