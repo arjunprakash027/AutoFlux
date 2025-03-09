@@ -14,6 +14,27 @@ For more indepth docs on particular services:
 A very basic architecture of environment setup using AutoFlux-lite
 ![AutoFlux v0 1 architecture](https://github.com/user-attachments/assets/bc4849ff-8a67-4421-8996-2bad0633db1b)
 
+## Overview of the architecture
+
+This is a lightweight version of a larger architecture that originally involved Spark, Hive, PostgreSQL, and Delta Lake. Instead of relying on these heavyweight components, this version leverages DuckDB—an embedded OLAP database—for efficient data storage and processing while keeping the system low on power consumption and compute requirements.
+
+### How It Works (Refer to the Architecture Diagram)
+
+#### 1.	Transformation & Ingestion:
+•	Raw data is ingested and processed inside the dbt container.
+•	After transformation, the cleaned data is stored in DuckDB, acting as the shared storage layer.
+#### 2.	Machine Learning Pipeline:
+•	The ML container fetches the transformed data from DuckDB.
+•	Data is further cleaned and preprocessed inside the ML container.
+•	MLflow is used to:
+•	Track experiments.
+•	Log metrics and artifacts.
+•	Store model versions for reproducibility.
+#### 3.	Outputs:
+•	A model accuracy and experiment dashboard for evaluation.
+•	A final trained model artifact ready for deployment.
+
+This setup is ideal for environments with limited compute resources, making it accessible for local development, edge devices, and low-power machines while maintaining an efficient ML pipeline.
 
 ## **Step-by-Step Usage**
 

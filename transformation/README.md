@@ -1,12 +1,12 @@
 # Transformation & Ingestion in AutoFlux
 
-AutoFlux integrates **Spark, Hive, PostgreSQL, Delta Lake, and dbt** for scalable and efficient **data ingestion and transformation** before ML model training.  
+AutoFlux-lite integrates **duckdb and dbt** for efficient **data ingestion and transformation** before ML model training.  
 
 This module ensures that raw data is **ingested, cleaned, and transformed** before being used in the ML pipeline.  
 
 
 ## **1️⃣ Data Ingestion**
-The **ingestion process** ensures that data is loaded into **Spark** and stored in **Delta Lake** for further transformation.
+The **ingestion process** ensures that data is loaded into **duckdb** for further transformation.
 
 ### **📌 Ingestion Script Overview**
 The ingestion script is located in:
@@ -14,7 +14,7 @@ The ingestion script is located in:
 transformation/ingestion/
 ```
 - **`statistella_ingest.py`** → Downloads datasets (supports **Kaggle**).  
-- **`utils.py`** → Contains helper functions for **traversing folders** and **ingesting into Spark**.  
+- **`utils.py`** → Contains helper functions for **traversing folders** and **ingesting into duckdb**.  
 - **`__main__.py`** → Runs the ingestion pipeline.  
 
 ### **🚀 Running the Ingestion Script**
@@ -25,17 +25,17 @@ python -m ingestion
 This will:
 1. **Download datasets** from Kaggle (if configured).  
 2. **Scan the dataset directory** for files.  
-3. **Load files into Spark** and store them in **Delta Lake** under the `raw` schema.  
+3. **Load files into duckdb** and store under the `raw` schema.  
 
-> **Customize `ingest_spark()`** in `utils.py` if you need a different ingestion process.  
+> **Customize `ingest_duckdb()`** in `utils.py` if you need a different ingestion process.  
 
 ---
 
 ## **2️⃣ Transformation using dbt**
-Once data is ingested into Spark, **dbt** handles **data transformation** into clean, structured datasets.
+Once data is ingested into duckdb, **dbt** handles **data transformation** into clean, structured datasets.
 
 ### **📌 Key Configuration Files**
-- **`profiles.yml`** → Configures dbt to connect to **Spark** (or another database if needed).  
+- **`profiles.yml`** → Configures dbt to connect to **duckdb** (or another database if needed).  
 - **`dbt_project.yml`** → Defines the dbt project structure.  
 - **`models/sources.yml`** → Specifies raw data sources.  
 - **`models/staging/`** → Contains statging logic.  
@@ -58,7 +58,7 @@ Once data is ingested into Spark, **dbt** handles **data transformation** into c
    - Modify **`stg_full.sql`** to **merge datasets** as required.
 
 3. **Configure `profiles.yml` for a Different DB**  
-   - If **Spark is not your preference**, modify `profiles.yml` to point to another database (e.g., PostgreSQL, BigQuery).  
+   - If **duckdb is not your preference**, modify `profiles.yml` to point to another database (e.g., PostgreSQL, BigQuery).  
 
 ### **🚀 Running the dbt Transformation**
 Once ingestion is complete, run:
@@ -68,15 +68,15 @@ dbt run
 This will:
 1. Load data into **staging tables**.
 2. Apply **transformations** (joins, filtering, feature engineering).
-3. Store the final dataset **back in Spark** for ML model training.
+3. Store the final dataset **back in duckdb** for ML model training.
 
 ---
 
 ## **3️⃣ Integration with ML Container**
-After transformation, the ML pipeline (**AutoFlux**) reads the processed data from Spark.
+After transformation, the ML pipeline reads the processed data from duckdb.
 
 ### **📌 Steps**
-1. **Ingest raw data** → Stored in **Delta Lake (`raw` schema)**.  
+1. **Ingest raw data** → Stored in **duckdb (`raw` schema)**.  
 2. **Run dbt transformations** → Output stored in **staging/mart schemas**.  
 3. **ML container reads the transformed data** for model training.  
 

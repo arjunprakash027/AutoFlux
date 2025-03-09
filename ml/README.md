@@ -6,11 +6,6 @@
 Before running AutoFlux, ensure the following dependencies and services are up and running:
 - **Poetry** is installed for dependency management. (Done in ml container)
 - **MLflow Server** is running on port **6969**. (Done in ml contianer)
-- **Apache Spark** (Master & Worker nodes) and **PostgreSQL Server** are operational.
-- **Delta Lake** and **dbt** (for data transformation) are correctly set up.
-
-> **Note:** A **mini version** will be released soon that will remove some of these dependencies.
-
 
 ## **1️⃣ Configuring `ml-compose.yaml`**
 The **ml-compose.yaml** file is crucial for setting up model training. You can find it inside the **src/** directory.  
@@ -18,7 +13,7 @@ The **ml-compose.yaml** file is crucial for setting up model training. You can f
 Before running the pipeline, modify the necessary configurations:
 
 ### **General Configuration**
-- **`input_data_source`**: Specify the schema and table name for training data in Spark (**`schema.table_name`** format).  
+- **`input_data_source`**: Specify the schema and table name for training data in duckdb (**`schema.table_name`** format).  
 - **`target`**: Define the target variable for supervised learning.  
 - **`unique_identifier`** *(optional)*: Set the column used as a unique ID (e.g., `customer_id`).
 
@@ -79,7 +74,7 @@ hyper_parameter_tuning:
 - It supports multiple models and iterates through each to train them.
 
 ### **Steps to Run the Pipeline**
-1. Ensure all services are running (**MLflow, Spark, PostgreSQL**).
+1. Ensure all services are running (**MLflow, duckdb, PostgreSQL**).
 2. Get into the docker container:
    ```bash
    docker exec -it ml bash
