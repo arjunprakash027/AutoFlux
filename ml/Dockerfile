@@ -22,5 +22,7 @@ RUN poetry config virtualenvs.create false && \
 
 EXPOSE 6969
 
-ENTRYPOINT [ "./start_server.sh" ]
+RUN chmod +x /app/start_server.sh
+
+ENTRYPOINT [ "/bin/bash","/app/start_server.sh" ]
 

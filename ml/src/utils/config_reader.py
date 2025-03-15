@@ -43,24 +43,16 @@ class Configrations(BaseModel):
             if not params:
                 values['models'][model_name] = {"model_params":{}} # Ensure model_params are present always
 
-class InputDefiner:
-    def __init__(self, config_path: Path):
-        self.config_path = config_path
+class PredictorConfigrations(BaseModel):
+    registered_model: str = Field(...)
+    version: int = Field(1)
+
+def read_config(config:dict) -> Configrations:
+    return Configrations(**config)
+
+def read_predictor_config(config:dict) -> PredictorConfigrations:
+    return PredictorConfigrations(**config)
     
-    def _read_config(self) -> Dict[str,Any]:
-        with open(self.config_path, "r") as f:
-            return yaml.safe_load(f)
-
-    def return_config_dataclass(self) -> Configrations:
-        config = self._read_config()
-        return Configrations(**config)
-        #return Configrations(**config)
-
-
-def read_config() -> Configrations:
-    return InputDefiner(Path("src/ml-compose.yaml")).return_config_dataclass()
-
-
 if __name__ == "__main__":
-    print(read_config())
+    pass
 

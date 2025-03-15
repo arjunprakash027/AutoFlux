@@ -34,5 +34,7 @@ RUN chmod 600 /root/.config/kaggle/kaggle.json
 
 COPY . .
 
-ENTRYPOINT ["./entrypoint.sh"]
+RUN chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/bin/bash","/app/entrypoint.sh"]
 

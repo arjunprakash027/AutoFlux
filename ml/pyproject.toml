@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "ML pipeline Building application"
 authors = ["Arjun P <arjunprakash027@gmail.com>"]
 readme = "README.md"
-packages = [{include = "ml"}]  # Ensure Poetry detects your package
+packages = [{include = "src"}]  # src must be mentioned to ensure peotry understands that src is where all the code resides even tho project name is ml
 
 [tool.poetry.dependencies]
 python = ">=3.10"

@@ -8,14 +8,15 @@ from src.utils.traditional_ml.trainer import Trainer
 import lightgbm
 import sklearn
 #pandas imports
-from pandas import DataFrame
+import pandas as pd
 import ibis
 import duckdb
 
 class TrainerPipeline:
 
-    def __init__(self,config:Configrations):
+    def __init__(self,config:Configrations, df:pd.DataFrame):
         self.config:Configrations = config
+        self.df = df
     
     @property
     def model_map(self) -> dict:
@@ -24,22 +25,6 @@ class TrainerPipeline:
             "LogisticRegression": sklearn.linear_model.LogisticRegression,
             "LGBMClassifier": lightgbm.LGBMClassifier
         }
-    
-    def _read_input(self) -> None:
-        
-        """
-        Input table retreival flow -> write any custom input table code here
-        """
-        input_table = self.config.training.input_data_source
-
-        con = duckdb.connect("database/ml_db.duckdb")
-        
-        df = con.table(input_table).execute().df()
-
-        df_num = df.select_dtypes(include=['number'])
-        df_num = df_num.fillna(0)
-
-        self.df = df_num # Assign your final transformed table here
 
     def _trainer_flow(self) -> None:
         
@@ -67,31 +52,8 @@ class TrainerPipeline:
 
             trainer.fit()
 
-    def _pipeline_run(self):
-
-        self._read_input()
+    def pipeline_run(self):
         self._trainer_flow()
 
 if __name__ == "__main__":
-    
-    config = read_config()
-
-    trainer = TrainerPipeline(config=config)
-
-    trainer._pipeline_run()
-
-# params = {
-#     "objective": "binary",
-#     "boosting_type": "dart",
-#     "max_depth": 1000,
-#     "n_estimators": 100
-# }
-
-# trainer = Trainer(
-#     estimator=lgb.LGBMClassifier,
-#     df=df_num,
-#     target="TARGET",
-#     params=params
-# )
-
-# trainer.fit()
+    pass
